@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmmakers Crow - Iraq's Premier Film Crew Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #e74c3c;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .welcome-section h1 {
+            color: #1e3c72;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1e3c72;
+            color: #1e3c72;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: #1e3c72;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        /* Search and Filter */
+        .search-controls {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        /* Results Display */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .crew-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .crew-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .crew-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .crew-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .crew-info h3 {
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+        }
+
+        .crew-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .crew-details {
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #1e3c72;
+        }
+
+        .availability-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .available {
+            background: #27ae60;
+            color: white;
+        }
+
+        .busy {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .partial {
+            background: #f39c12;
+            color: white;
+        }
+
+        /* Admin Panel */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Iraqi Flag Colors Integration */
+        .flag-accent {
+            background: linear-gradient(90deg, #ce1126 33%, #ffffff 33%, #ffffff 66%, #000000 66%);
+            height: 4px;
+            margin: 1rem 0;
+        }
+
+        .iraq-gradient {
+            background: linear-gradient(45deg, #ce1126, #000000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                🎬 <span class="iraq-gradient">Filmmakers Crow</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')" class="active">Home</a></li>
+                <li><a href="#" onclick="showSection('register')">Register</a></li>
+                <li><a href="#" onclick="showSection('search')">Find Crew</a></li>
+                <li><a href="#" onclick="showSection('admin')">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content container">
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="welcome-section">
+                <h1>Welcome to Filmmakers Crow</h1>
+                <div class="flag-accent"></div>
+                <p>Iraq's largest digital database connecting talented film and media crew members with production companies across the country. Building the future of Iraqi cinema, one connection at a time.</p>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="showSection('register')">Join as Crew Member</button>
+                    <button class="btn btn-secondary" onclick="showSection('search')">Find Talent</button>
+                    <button class="btn btn-outline" onclick="showSection('admin')">Admin Panel</button>
+                </div>
+            </div>
+
+            <div class="content-section" style="display: block;">
+                <h2 class="section-title">Our Mission</h2>
+                <div class="form-grid">
+                    <div>
+                        <h3 style="color: #e74c3c; margin-bottom: 1rem;">🎯 Connect Talent</h3>
+                        <p>Bridge the gap between skilled technicians and production companies across all Iraqi provinces.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #e74c3c; margin-bottom: 1rem;">🚀 Grow Industry</h3>
+                        <p>Support the growth of Iraq's local film and media industry through improved access to professionals.</p>
+                    </div>
+                    <div>
+                        <h3 style="color: #e74c3c; margin-bottom: 1rem;">💼 Create Jobs</h3>
+                        <p>Increase employment opportunities for talented crew members nationwide.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Section -->
+        <div id="register" class="content-section">
+            <h2 class="section-title">Crew Member Registration</h2>
+            <form id="crewRegistrationForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="province">Province *</label>
+                        <select id="province" name="province" required>
+                            <option value="">Select Province</option>
+                            <option value="Baghdad">Baghdad</option>
+                            <option value="Basra">Basra</option>
+                            <option value="Nineveh">Nineveh</option>
+                            <option value="Erbil">Erbil</option>
+                            <option value="Najaf">Najaf</option>
+                            <option value="Karbala">Karbala</option>
+                            <option value="Babil">Babil</option>
+                            <option value="Wasit">Wasit</option>
+                            <option value="Diyala">Diyala</option>
+                            <option value="Anbar">Anbar</option>
+                            <option value="Saladin">Saladin</option>
+                            <option value="Kirkuk">Kirkuk</option>
+                            <option value="Dohuk">Dohuk</option>
+                            <option value="Sulaymaniyah">Sulaymaniyah</option>
+                            <option value="Maysan">Maysan</option>
+                            <option value="Dhi Qar">Dhi Qar</option>
+                            <option value="Al-Qadisiyyah">Al-Qadisiyyah</option>
+                            <option value="Al-Muthanna">Al-Muthanna</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Primary Specialization *</label>
+                        <select id="specialization" name="specialization" required>
+                            <option value="">Select Specialization</option>
+                            <option value="Camera Operator">Camera Operator</option>
+                            <option value="Director of Photography">Director of Photography</option>
+                            <option value="Lighting Technician">Lighting Technician</option>
+                            <option value="Sound Designer">Sound Designer</option>
+                            <option value="Sound Engineer">Sound Engineer</option>
+                            <option value="Set Decorator">Set Decorator</option>
+                            <option value="Production Designer">Production Designer</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Color Grader">Color Grader</option>
+                            <option value="Visual Effects Artist">Visual Effects Artist</option>
+                            <option value="Director">Director</option>
+                            <option value="Assistant Director">Assistant Director</option>
+                            <option value="Producer">Producer</option>
+                            <option value="Script Supervisor">Script Supervisor</option>
+                            <option value="Makeup Artist">Makeup Artist</option>
+                            <option value="Costume Designer">Costume Designer</option>
+                            <option value="Gaffer">Gaffer</option>
+                            <option value="Grip">Grip</option>
+                            <option value="Focus Puller">Focus Puller</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Years of Experience *</label>
+                        <select id="experience" name="experience" required>
+                            <option value="">Select Experience</option>
+                            <option value="0-1">0-1 years</option>
+                            <option value="2-3">2-3 years</option>
+                            <option value="4-5">4-5 years</option>
+                            <option value="6-10">6-10 years</option>
+                            <option value="10+">10+ years</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="availability">Current Availability *</label>
+                        <select id="availability" name="availability" required>
+                            <option value="">Select Availability</option>
+                            <option value="Available">Available</option>
+                            <option value="Busy">Busy</option>
+                            <option value="Partial">Partially Available</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="equipment">Own Equipment</label>
+                        <select id="equipment" name="equipment">
+                            <option value="No">No</option>
+                            <option value="Basic">Basic Equipment</option>
+                            <option value="Professional">Professional Equipment</option>
+                            <option value="Full">Full Equipment Set</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="languages">Languages Spoken</label>
+                        <input type="text" id="languages" name="languages" placeholder="Arabic, English, Kurdish, etc.">
+                    </div>
+                    <div class="form-group">
+                        <label for="portfolio">Portfolio/Reel URL</label>
+                        <input type="url" id="portfolio" name="portfolio" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Professional Bio</label>
+                    <textarea id="bio" name="bio" rows="4" placeholder="Tell us about your experience, skills, and what makes you unique..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="previousWork">Previous Work/Credits</label>
+                    <textarea id="previousWork" name="previousWork" rows="3" placeholder="List notable projects, productions, or companies you've worked with..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register as Crew Member</button>
+            </form>
+        </div>
+
+        <!-- Search Section -->
+        <div id="search" class="content-section">
+            <h2 class="section-title">Find Crew Members</h2>
+            <div class="search-controls">
+                <div class="search-grid">
+                    <div class="form-group">
+                        <label for="searchName">Name</label>
+                        <input type="text" id="searchName" placeholder="Search by name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchProvince">Province</label>
+                        <select id="searchProvince">
+                            <option value="">All Provinces</option>
+                            <option value="Baghdad">Baghdad</option>
+                            <option value="Basra">Basra</option>
+                            <option value="Nineveh">Nineveh</option>
+                            <option value="Erbil">Erbil</option>
+                            <option value="Najaf">Najaf</option>
+                            <option value="Karbala">Karbala</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchSpecialization">Specialization</label>
+                        <select id="searchSpecialization">
+                            <option value="">All Specializations</option>
+                            <option value="Camera Operator">Camera Operator</option>
+                            <option value="Director of Photography">Director of Photography</option>
+                            <option value="Lighting Technician">Lighting Technician</option>
+                            <option value="Sound Designer">Sound Designer</option>
+                            <option value="Editor">Editor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchAvailability">Availability</label>
+                        <select id="searchAvailability">
+                            <option value="">All</option>
+                            <option value="Available">Available</option>
+                            <option value="Partial">Partially Available</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="searchCrew()">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="searchResults" class="results-grid">
+                <!-- Sample crew members will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Admin Section -->
+        <div id="admin" class="content-section">
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCrew">247</div>
+                    <div class="stat-label">Total Crew Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="availableCrew">156</div>
+                    <div class="stat-label">Available Now</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalProvinces">18</div>
+                    <div class="stat-label">Provinces Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="newRegistrations">23</div>
+                    <div class="stat-label">New This Month</div>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div>
+                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">📊 Database Management</h3>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Export All Data</button>
+                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 0.5rem;">Import Data</button>
+                    <button class="btn btn-primary" style="width: 100%;">Generate Reports</button>
+                </div>
+                <div>
+                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">🔧 System Tools</h3>
+                    <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Send Notifications</button>
+                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 0.5rem;">Manage Categories</button>
+                    <button class="btn btn-primary" style="width: 100%;">System Settings</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample crew data for demonstration
+        let crewDatabase = [
+            {
+                id: 1,
+                fullName: "Ahmed Al-Baghdadi",
+                email: "ahmed@email.com",
+                phone: "+964771234567",
+                province: "Baghdad",
+                city: "Baghdad",
+                specialization: "Director of Photography",
+                experience: "6-10",
+                availability: "Available",
+                equipment: "Professional",
+                languages: "Arabic, English",
+                bio: "Experienced cinematographer with a passion for visual storytelling. Worked on numerous commercial and documentary projects.",
+                previousWork: "Iraq National TV, Several documentary films, Commercial advertisements"
+            },
+            {
+                id: 2,
+                fullName: "Fatima Al-Basri",
+                email: "fatima@email.com",
+                phone: "+964771234568",
+                province: "Basra",
+                city: "Basra",
+                specialization: "Sound Designer",
+                experience: "4-5",
+                availability: "Partial",
+                equipment: "Basic",
+                languages: "Arabic, English",
+                bio: "Creative sound designer specializing in post-production audio for films and commercials.",
+                previousWork: "Multiple short films, Radio dramas, Corporate videos"
+            },
+            {
+                id: 3,
+                fullName: "Omar Al-Kurdi",
+                email: "omar@email.com",
+                phone: "+964771234569",
+                province: "Erbil",
+                city: "Erbil",
+                specialization: "Editor",
+                experience: "2-3",
+                availability: "Available",
+                equipment: "Professional",
+                languages: "Kurdish, Arabic, English",
+                bio: "Young and talented editor with expertise in digital storytelling and motion graphics.",
+                previousWork: "Local TV productions, Music videos, Social media content"
+            }
+        ];
+
+        // Navigation function
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Form submission handler
+        document.getElementById('crewRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const crewMember = {};
+            
+            for (let [key, value] of formData.entries()) {
+                crewMember[key] = value;
+            }
+            
+            // Add to database (in real implementation, this would be sent to a server)
+            crewMember.id = crewDatabase.length + 1;
+            crewDatabase.push(crewMember);
+            
+            // Show success message
+            alert('Registration successful! Welcome to Filmmakers Crow.');
+            
+            // Reset form
+            this.reset();
+            
+            // Update admin stats
+            updateAdminStats();
+        });
+
+        // Search function
+        function searchCrew() {
+            const searchName = document.getElementById('searchName').value.toLowerCase();
+            const searchProvince = document.getElementById('searchProvince').value;
+            const searchSpecialization = document.getElementById('searchSpecialization').value;
+            const searchAvailability = document.getElementById('searchAvailability').value;
+            
+            let filteredCrew = crewDatabase.filter(member => {
+                return (!searchName || member.fullName.toLowerCase().includes(searchName)) &&
+                       (!searchProvince || member.province === searchProvince) &&
+                       (!searchSpecialization || member.specialization === searchSpecialization) &&
+                       (!searchAvailability || member.availability === searchAvailability);
+            });
+            
+            displaySearchResults(filteredCrew);
+        }
+
+        // Display search results
+        function displaySearchResults(crew) {
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (crew.length === 0) {
+                resultsContainer.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No crew members found matching your criteria.</p>';
+                return;
+            }
+            
+            resultsContainer.innerHTML = crew.map(member => `
+                <div class="crew-card">
+                    <div class="crew-header">
+                        <div class="crew-avatar">${member.fullName.split(' ').map(n => n[0]).join('')}</div>
+                        <div class="crew-info">
+                            <h3>${member.fullName}</h3>
+                            <p>${member.specialization}</p>
+                        </div>
+                    </div>
+                    <div class="crew-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Location:</span>
+                            <span>${member.city}, ${member.province}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Experience:</span>
+                            <span>${member.experience} years</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Equipment:</span>
+                            <span>${member.equipment || 'Not specified'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Languages:</span>
+                            <span>${member.languages || 'Not specified'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Availability:</span>
+                            <span class="availability-status ${member.availability.toLowerCase().replace(' ', '')}">${member.availability}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Contact:</span>
+                            <span>${member.phone}</span>
+                        </div>
+                    </div>
+                    ${member.bio ? `<p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">${member.bio}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Update admin statistics
+        function updateAdminStats() {
+            document.getElementById('totalCrew').textContent = crewDatabase.length;
+            document.getElementById('availableCrew').textContent = crewDatabase.filter(m => m.availability === 'Available').length;
+            
+            const provinces = new
